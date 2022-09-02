@@ -144,7 +144,7 @@ public class IFrame implements GuiHandler {
 		if(component == null) return;
 
 		Vector2i pos = Vector2i.fromSlot(event.getSlot(), INVENTORY_WIDTH);
-		clickInfo.reset(pos, (Player) event.getWhoClicked(), event);
+		clickInfo.reset(pos.subtract(component.getPos()), (Player) event.getWhoClicked(), event);
 
 		component.onClick(clickInfo);
 

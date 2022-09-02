@@ -62,4 +62,12 @@ public class Vector2i {
 	public Bounds2i toBounds(Vector2i offset) {
 		return new Bounds2i(offset, this);
 	}
+
+	public int getArea() {
+		return x * y;
+	}
+
+	public Vector2i subtract(Vector2i pos) {
+		return new Vector2i(x - pos.x, y - pos.y);
+	}
 }

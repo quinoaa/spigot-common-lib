@@ -34,7 +34,7 @@ import space.quinoaa.spigotcommons.data.Vector2i;
 public abstract class Component {
 	private Bounds2i bounds;
 	private int zIndex;
-	private IFrame parent;
+	private IFrame parent = null;
 
 	public final void init(Bounds2i bounds, int zIndex, IFrame frame){
 		this.bounds = bounds;
@@ -46,6 +46,10 @@ public abstract class Component {
 
 
 
+
+	public Vector2i getPos() {
+		return getBounds().offset;
+	}
 	public final Vector2i getSize(){
 		return bounds.size;
 	}

@@ -24,7 +24,9 @@
 
 package space.quinoaa.spigotcommons.gui.frame.component;
 
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import space.quinoaa.spigotcommons.data.Provider;
@@ -33,9 +35,12 @@ import space.quinoaa.spigotcommons.gui.frame.ClickInfo;
 import java.util.function.Consumer;
 
 public class Button extends Panel{
-	final Consumer<ClickType> onClick;
+	@Getter @Setter	Consumer<ClickType> onClick;
 
 
+	public Button(@NonNull Provider<ItemStack> item) {
+		this(item, click->{});
+	}
 
 	public Button(@NonNull ItemStack item, Consumer<ClickType> onClick) {
 		this(()->item, onClick);
@@ -47,7 +52,6 @@ public class Button extends Panel{
 
 	@Override
 	public void onClick(ClickInfo info) {
-
 		onClick.accept(info.getEvent().getClick());
 	}
 }
