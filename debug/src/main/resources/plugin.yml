@@ -1,0 +1,8 @@
+name: TestPlugin
+version: ok
+description: shouldn't be used
+main: space.quinoaa.testplugin.TestPlugin
+
+commands:
+  guidebug:
+    aliases: gd
