@@ -22,7 +22,7 @@ You can also run `mvn install` on the cloned repo instead of adding this repo.
 ```xml
 <dependency>
 	<groupId>space.quinoaa</groupId>
-	<artifactId>spigot-commons.modules</artifactId>
+	<artifactId>spigot-commons-modules</artifactId>
 	<version>(Version here)</version>
 </dependency>
 ```
@@ -39,7 +39,7 @@ Shading is required, as the modules are not shipped by a plugin.
 	<configuration>
 		<artifactSet>
 			<includes>
-				<include>space.quinoaa:spigot-commons.modules</include>
+				<include>space.quinoaa:spigot-commons-modules</include>
 			</includes>
 		</artifactSet>
 	</configuration>
