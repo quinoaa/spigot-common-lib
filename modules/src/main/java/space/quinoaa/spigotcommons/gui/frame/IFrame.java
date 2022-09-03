@@ -98,8 +98,11 @@ public class IFrame implements GuiHandler {
 				slotMask.put(index, component);
 			}
 		});
-		component.init(bounds, zIndex, this);
-		if(inventory != null) component.render();
+		component.initData(bounds, zIndex, this);
+		if(inventory != null) {
+			component.init();
+			component.render();
+		}
 	}
 
 	public void setItem(Component component, int slot, ItemStack item){
@@ -117,6 +120,7 @@ public class IFrame implements GuiHandler {
 		inventory = inventoryBuilder.apply(player);
 		this.player = player;
 		this.guiApi = api;
+		components.forEach(Component::init);
 		components.forEach(Component::render);
 
 		return inventory;
@@ -146,7 +150,11 @@ public class IFrame implements GuiHandler {
 		Vector2i pos = Vector2i.fromSlot(event.getSlot(), INVENTORY_WIDTH);
 		clickInfo.reset(pos.subtract(component.getPos()), (Player) event.getWhoClicked(), event);
 
-		component.onClick(clickInfo);
+		try{
+			component.onClick(clickInfo);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 		if(clickInfo.cancelled) event.setCancelled(true);
 	}

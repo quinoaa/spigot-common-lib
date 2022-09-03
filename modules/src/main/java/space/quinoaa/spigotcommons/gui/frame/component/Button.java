@@ -42,6 +42,10 @@ public class Button extends Panel{
 		this(item, click->{});
 	}
 
+	public Button(@NonNull ItemStack item) {
+		this(item, click->{});
+	}
+
 	public Button(@NonNull ItemStack item, Consumer<ClickType> onClick) {
 		this(()->item, onClick);
 	}

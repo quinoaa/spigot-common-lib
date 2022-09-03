@@ -24,14 +24,12 @@
 
 package space.quinoaa.testplugin.gui.component;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import space.quinoaa.spigotcommons.gui.frame.ClickInfo;
 import space.quinoaa.spigotcommons.gui.frame.Component;
 import space.quinoaa.spigotcommons.util.ItemBuilder;
-import space.quinoaa.testplugin.TestPlugin;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class Counter extends Component {
 	int count = 0;
@@ -58,7 +56,7 @@ public class Counter extends Component {
 				new ItemBuilder(Material.WATCH)
 						.setName("Count: " + count / 20)
 						.setLore(
-								Arrays.asList(
+								Collections.singletonList(
 										"Given: " + clickCount
 								)
 						)

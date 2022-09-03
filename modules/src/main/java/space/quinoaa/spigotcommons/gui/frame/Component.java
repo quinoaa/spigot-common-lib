@@ -36,12 +36,10 @@ public abstract class Component {
 	private int zIndex;
 	private IFrame parent = null;
 
-	public final void init(Bounds2i bounds, int zIndex, IFrame frame){
+	public final void initData(Bounds2i bounds, int zIndex, IFrame frame){
 		this.bounds = bounds;
 		this.zIndex = zIndex;
 		this.parent = frame;
-
-		onInit();
 	}
 
 
@@ -57,12 +55,17 @@ public abstract class Component {
 
 
 
+
 	/**
 	 * Draws an item to the position relative to this component.
 	 * Warns if the item is out of bound
 	 */
 	public final void setItem(Vector2i position, ItemStack item){
 		Vector2i abs = position.add(bounds.offset);
+		if(parent.inventory == null){
+			log.severe(this.getClass() + " attempted to render when not initialized");
+			return;
+		}
 		parent.setItem(this, abs.toIndex(parent.getBase()), item);
 	}
 
@@ -76,7 +79,7 @@ public abstract class Component {
 
 
 
-	public void onInit(){}
+	public void init(){}
 
 	public void onTick(){}
 

@@ -25,6 +25,7 @@
 package space.quinoaa.spigotcommons.gui.frame.component;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import space.quinoaa.spigotcommons.data.Provider;
@@ -35,6 +36,7 @@ import space.quinoaa.spigotcommons.gui.frame.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ListView<T> extends Component {
@@ -42,6 +44,7 @@ public class ListView<T> extends Component {
 	Function<T, ItemStack> mapper;
 	Provider<ItemStack> background = ()->null;
 	BiConsumer<T, ClickType> onClick;
+	@Getter @Setter	Consumer<ListView<T>> pageListener = (list)->{};
 
 	@Getter int itemPerPage = 0;
 	@Getter int page = 0;
@@ -53,10 +56,16 @@ public class ListView<T> extends Component {
 		this.onClick = onClick;
 	}
 
+	public ListView(List<T> list, Function<T, ItemStack> mapper, BiConsumer<T, ClickType> onClick,
+					Button previous, Button next) {
+		this(list, mapper, onClick);
+		previous.setOnClick(t->turnPages(-1));
+		next.setOnClick(t->turnPages(1));
+	}
 
 
 	@Override
-	public void onInit() {
+	public void init() {
 		itemPerPage = getSize().getArea();
 		updateList();
 	}
@@ -86,11 +95,14 @@ public class ListView<T> extends Component {
 		page = Math.max(0, page);
 
 		render();
+		pageListener.accept(this);
 	}
 
 
 	@Override
 	public void onClick(ClickInfo info) {
+		if(itemPerPage == 0) return;
+
 		int index = info.getSlot().toIndex(getSize().x) + page * itemPerPage;
 		if(index < list.size()){
 			onClick.accept(list.get(index), info.getEvent().getClick());
@@ -105,7 +117,7 @@ public class ListView<T> extends Component {
 
 		fillItems(getSize().toBounds(0, 0), background.get());
 
-		int pageOffset = page * itemPerPage, max = Math.min(itemPerPage + page, list.size());
+		int pageOffset = page * itemPerPage, max = Math.min(itemPerPage + pageOffset, list.size());
 		for (int i = pageOffset; i < max; i++) {
 			T item = list.get(i);
 

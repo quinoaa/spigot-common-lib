@@ -24,7 +24,6 @@
 
 package space.quinoaa.spigotcommons.util;
 
-import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,7 +31,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class ItemBuilder {
-	private ItemStack item;
+	private final ItemStack item;
 
 
 	public ItemBuilder(ItemStack item) {

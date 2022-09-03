@@ -3,7 +3,6 @@ package space.quinoaa.testplugin.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import space.quinoaa.spigotcommons.data.Bounds2i;
 import space.quinoaa.spigotcommons.data.Vector2i;
 import space.quinoaa.spigotcommons.gui.frame.IFrame;
@@ -44,6 +43,13 @@ public class DebugMenu extends IFrame {
 				), new Vector2i(4, 1)
 		);
 
+		addComponent(
+				new Button(
+						new ItemBuilder(Material.MAP).setName("Test list").build(),
+						click->getGuiApi().showGui(getPlayer(), new ListTest())
+				), new Vector2i(6, 1)
+		);
+
 
 	}
 
@@ -52,7 +58,7 @@ public class DebugMenu extends IFrame {
 	@Override
 	public void onClose(Player player) {
 		super.onClose(player);
-		getPlayer().sendMessage("Closed");
+		player.sendMessage("Closed");
 		closed = true;
 	}
 
