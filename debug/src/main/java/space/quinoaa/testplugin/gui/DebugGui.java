@@ -25,61 +25,30 @@
 package space.quinoaa.testplugin.gui;
 
 import org.bukkit.Material;
-import space.quinoaa.spigotcommons.data.Bounds2i;
-import space.quinoaa.spigotcommons.data.Vector2i;
-import space.quinoaa.spigotcommons.gui.frame.IFrame;
+import org.bukkit.entity.Player;
+import space.quinoaa.spigotcommons.gui.data.Bounds2i;
+import space.quinoaa.spigotcommons.gui.data.Vector2i;
+import space.quinoaa.spigotcommons.gui.frame.CFrame;
 import space.quinoaa.spigotcommons.gui.frame.component.Button;
-import space.quinoaa.spigotcommons.gui.frame.component.ListView;
-import space.quinoaa.spigotcommons.gui.frame.component.Panel;
 import space.quinoaa.spigotcommons.util.ItemBuilder;
+import space.quinoaa.testplugin.TestPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
+public class DebugGui {
 
-public class ListTest extends IFrame {
+	public static void open(Player player) {
+		CFrame frame = new CFrame(27, "debug gui");
 
-	Button previous = new Button(
-			new ItemBuilder(Material.BOOK).setName("Previous").build()
-	);
-
-	Button next = new Button(
-			new ItemBuilder(Material.BOOK).setName("Next").build()
-	);
-
-	ListView<Integer> list = new ListView<>(
-			new ArrayList<>(),
-			i->new ItemBuilder(Material.PAPER).setName("paper" + i).build(),
-			(i, click) -> getPlayer().sendMessage("clicked " + i + " type " + click),
-			previous,
-			next
-	);
-
-	public ListTest() {
-		super(9 * 6, "List test");
-
-		addComponent(list, new Bounds2i(0, 0, 9, 5));
-		addComponent(
-				new Panel(new ItemBuilder(Material.STAINED_GLASS_PANE).build()),
-				new Bounds2i(0, 5, 9, 1),
-				-1
+		frame.addComponent(
+				new Button(
+				new ItemBuilder(Material.DIAMOND_SWORD)
+				.setName("lol").build(),
+				click->{
+					ListGui.open(player, ()->open(player));
+				}),
+				new Vector2i(1, 1),
+				1
 		);
-		addComponent(previous, new Vector2i(3, 5));
-		addComponent(next, new Vector2i(5, 5));
 
-
-
-		list.setList(genList());
+		TestPlugin.getGuiApi().showGui(player, frame);
 	}
-	
-	private List<Integer> genList(){
-		List<Integer> ls = new ArrayList<>();
-
-		for (int i = 0; i < 1000; i++) {
-			ls.add(i);
-		}
-		
-		return ls;
-	}
-
-
 }
