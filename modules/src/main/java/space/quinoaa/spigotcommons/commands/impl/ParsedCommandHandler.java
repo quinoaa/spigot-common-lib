@@ -22,24 +22,12 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.spigotcommons.gui.frame.component;
+package space.quinoaa.spigotcommons.commands.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import org.bukkit.inventory.ItemStack;
-import space.quinoaa.spigotcommons.data.Provider;
-import space.quinoaa.spigotcommons.gui.frame.Component;
+import org.bukkit.command.CommandSender;
+import space.quinoaa.spigotcommons.commands.args.ParsedArguments;
 
-@AllArgsConstructor
-public class Panel extends Component {
-	@NonNull Provider<ItemStack> item;
+import java.util.function.BiConsumer;
 
-	public Panel(@NonNull ItemStack item) {
-		this.item = ()->item;
-	}
-
-	@Override
-	public void render() {
-		fillItems(getSize().toBounds(0, 0), item.get());
-	}
+public interface ParsedCommandHandler extends BiConsumer<CommandSender, ParsedArguments> {
 }
