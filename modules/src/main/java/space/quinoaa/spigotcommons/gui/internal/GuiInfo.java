@@ -22,45 +22,14 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.testplugin.gui.component;
+package space.quinoaa.spigotcommons.gui.internal;
 
-import org.bukkit.Material;
-import space.quinoaa.spigotcommons.gui.frame.ClickInfo;
-import space.quinoaa.spigotcommons.gui.frame.Component;
-import space.quinoaa.spigotcommons.util.ItemBuilder;
+import lombok.AllArgsConstructor;
+import org.bukkit.inventory.InventoryView;
+import space.quinoaa.spigotcommons.gui.GuiHandler;
 
-import java.util.Collections;
-
-public class Counter extends Component {
-	int count = 0;
-	int clickCount = 0;
-
-	@Override
-	public void onTick() {
-		count++;
-		render();
-	}
-
-	@Override
-	public void onClick(ClickInfo info) {
-		if(info.getEvent().getCursor().getAmount() != 0) return;
-
-		clickCount++;
-		info.setCancelled(false);
-	}
-
-	@Override
-	public void render() {
-		fillItems(
-				getSize().toBounds(0, 0),
-				new ItemBuilder(Material.WATCH)
-						.setName("Count: " + count / 20)
-						.setLore(
-								Collections.singletonList(
-										"Given: " + clickCount
-								)
-						)
-						.build()
-		);
-	}
+@AllArgsConstructor
+public class GuiInfo {
+	public final InventoryView inventory;
+	public final GuiHandler gui;
 }

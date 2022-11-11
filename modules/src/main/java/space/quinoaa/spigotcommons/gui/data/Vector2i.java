@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.spigotcommons.data;
+package space.quinoaa.spigotcommons.gui.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,8 +34,10 @@ import java.util.function.Consumer;
 @AllArgsConstructor
 @Getter @Setter @ToString
 public class Vector2i {
+	public static final int CHEST_WIDTH = 9;
 	public static Vector2i ZERO = new Vector2i(0, 0);
 	public final int x, y;
+
 
 
 	public Vector2i add(Vector2i vec){
@@ -52,9 +54,6 @@ public class Vector2i {
 		return x + y * base;
 	}
 
-	public static Vector2i fromSlot(int slot, int base) {
-		return new Vector2i(slot % base, slot / base);
-	}
 
 	public Bounds2i toBounds(int offsetx, int offsety) {
 		return toBounds(new Vector2i(offsetx, offsety));
@@ -69,5 +68,22 @@ public class Vector2i {
 
 	public Vector2i subtract(Vector2i pos) {
 		return new Vector2i(x - pos.x, y - pos.y);
+	}
+
+	public boolean isInside(Vector2i rect) {
+		return x >= 0 && y >= 0 && x < rect.x && y < rect.y;
+	}
+
+	public boolean isInside(Bounds2i bounds) {
+		Vector2i outer = bounds.size.add(bounds.offset);
+		return x >= bounds.offset.x && y >= bounds.offset.y && x < outer.x && y < outer.y;
+	}
+
+	public static Vector2i fromSlotCount(int slot, int base) {
+		return new Vector2i(slot % base, slot / base);
+	}
+
+	public static Vector2i resolveRectHeight(int size, int width) {
+		return new Vector2i(width, size / width);
 	}
 }

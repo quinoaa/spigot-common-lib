@@ -25,67 +25,58 @@
 package space.quinoaa.spigotcommons.gui.frame;
 
 import lombok.Getter;
-import lombok.extern.java.Log;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
-import space.quinoaa.spigotcommons.data.Bounds2i;
-import space.quinoaa.spigotcommons.data.Vector2i;
+import space.quinoaa.spigotcommons.gui.data.Bounds2i;
+import space.quinoaa.spigotcommons.gui.data.Vector2i;
 
-@Getter @Log
 public abstract class Component {
-	private Bounds2i bounds;
-	private int zIndex;
-	private IFrame parent = null;
-
-	public final void initData(Bounds2i bounds, int zIndex, IFrame frame){
-		this.bounds = bounds;
-		this.zIndex = zIndex;
-		this.parent = frame;
-	}
+	@Getter Bounds2i bounds = null;
+	@Getter ComponentHolder parent = null;
+	@Getter int ZIndex = 0;
 
 
-
-
-	public Vector2i getPos() {
-		return getBounds().offset;
-	}
 	public final Vector2i getSize(){
 		return bounds.size;
 	}
 
-
-
-
-
-	/**
-	 * Draws an item to the position relative to this component.
-	 * Warns if the item is out of bound
-	 */
-	public final void setItem(Vector2i position, ItemStack item){
-		Vector2i abs = position.add(bounds.offset);
-		if(parent.inventory == null){
-			log.severe(this.getClass() + " attempted to render when not initialized");
-			return;
-		}
-		parent.setItem(this, abs.toIndex(parent.getBase()), item);
+	public final void fillItem(ItemStack item, Bounds2i bounds){
+		bounds.forEach(pos->setItem(item, pos));
 	}
 
-	/**
-	 * Fills the bounds with items.
-	 * Warns if the item is out of bound
-	 */
-	public final void fillItems(Bounds2i bounds, ItemStack item){
-		bounds.forEach(pos->setItem(pos, item));
+	public final void fillItem(ItemStack item, Vector2i bounds){
+		bounds.forEach(pos->setItem(item, pos));
+	}
+
+	public final void setItem(ItemStack item, Vector2i relative){
+		parent.setItem(item != null ? item.clone() : null, relative, this);
 	}
 
 
+	/**
+	 * Added after the component is added to parents.
+	 * Component is ready and can start rendering.
+	 */
+	public abstract void init();
 
-	public void init(){}
 
-	public void onTick(){}
-
-	public void onDispose(){}
-
-	public void onClick(ClickInfo info){}
-
+	/**
+	 * Callable after it is added to component holder.<br />
+	 * <br />
+	 * First called when {@link ComponentHolder#addComponent(Component, Bounds2i, int)} is used.
+	 * Render with {@link #fillItem(ItemStack, Bounds2i)} and {@link #setItem(ItemStack, Vector2i)}
+	 */
 	public abstract void render();
+
+
+
+	public abstract void onClick(InventoryClickEvent event, Vector2i relative, ClickResult result);
+
+	public boolean supportsDrag(){
+		return false;
+	}
+	public void onDrag(InventoryDragEvent event, Vector2i[] relative, ClickResult result){
+
+	}
 }

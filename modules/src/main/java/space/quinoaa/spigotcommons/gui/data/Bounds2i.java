@@ -22,43 +22,25 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.spigotcommons.gui;
+package space.quinoaa.spigotcommons.gui.data;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
-public interface GuiHandler {
+@AllArgsConstructor
+@Getter @Setter @ToString
+public class Bounds2i {
+	public final Vector2i offset, size;
 
-	/**
-	 * Sets up the inventory
-	 */
-	Inventory setup(Player player, GuiApi api);
+	public Bounds2i(int x, int y, int width, int height) {
+		this(new Vector2i(x, y), new Vector2i(width, height));
+	}
 
-	/**
-	 * Called when inventory is closed
-	 * @param player player which closed the inventory
-	 */
-	void onClose(Player player);
-
-	/**
-	 * Ticker will be executed every tick until inventory is closed.
-	 */
-	Optional<Ticker> tick(Player player);
-
-
-
-
-	void click(InventoryClickEvent event);
-
-	void drag(InventoryDragEvent event);
-
-
-
-	interface Ticker{
-		void tick();
+	public void forEach(Consumer<Vector2i> consumer){
+		size.forEach(vec->consumer.accept(vec.add(offset)));
 	}
 }

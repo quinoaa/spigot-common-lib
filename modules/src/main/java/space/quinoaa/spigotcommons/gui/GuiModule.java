@@ -27,24 +27,33 @@ package space.quinoaa.spigotcommons.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import space.quinoaa.spigotcommons.Module;
+import space.quinoaa.spigotcommons.gui.internal.GuiManager;
 
 public class GuiModule implements Module<GuiApi> {
-	GuiApi api = new GuiApi(this);
-	GuiManager manager = new GuiManager(api);
+	JavaPlugin plugin;
+	final GuiApi api = new GuiApi(this);
+	GuiManager mgr;
 
 	@Override
 	public void load(JavaPlugin plugin) {
+		this.plugin = plugin;
+		mgr = new GuiManager(this, plugin);
 		Bukkit.getPluginManager().registerEvents(new GuiListener(this), plugin);
-		Bukkit.getScheduler().runTaskTimer(plugin, manager::tick, 1, 1);
+		Bukkit.getScheduler().runTaskTimer(plugin, mgr::tick, 1, 1);
 	}
 
 	@Override
 	public void dispose() {
-		manager.dispose();
+
 	}
 
 	@Override
 	public GuiApi getApi() {
 		return api;
 	}
+
+
+
+
+
 }

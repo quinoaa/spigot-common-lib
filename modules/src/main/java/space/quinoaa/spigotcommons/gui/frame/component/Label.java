@@ -22,25 +22,34 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.spigotcommons.data;
+package space.quinoaa.spigotcommons.gui.frame.component;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.function.Consumer;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import space.quinoaa.spigotcommons.gui.data.Vector2i;
+import space.quinoaa.spigotcommons.gui.frame.ClickResult;
+import space.quinoaa.spigotcommons.gui.frame.Component;
+import space.quinoaa.spigotcommons.impl.Provider;
 
 @AllArgsConstructor
-@Getter @Setter @ToString
-public class Bounds2i {
-	public final Vector2i offset, size;
+public class Label extends Component {
+	final Provider<ItemStack> iconProvider;
 
-	public Bounds2i(int x, int y, int width, int height) {
-		this(new Vector2i(x, y), new Vector2i(width, height));
+	public Label(ItemStack item) {
+		this.iconProvider = ()->item;
 	}
 
-	public void forEach(Consumer<Vector2i> consumer){
-		size.forEach(vec->consumer.accept(vec.add(offset)));
+	@Override
+	public void init() {}
+
+	@Override
+	public void render() {
+		fillItem(iconProvider.get(), getSize());
+	}
+
+	@Override
+	public void onClick(InventoryClickEvent event, Vector2i relative, ClickResult result) {
+
 	}
 }

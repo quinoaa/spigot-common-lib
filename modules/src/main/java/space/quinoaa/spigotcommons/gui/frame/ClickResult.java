@@ -26,28 +26,10 @@ package space.quinoaa.spigotcommons.gui.frame;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import space.quinoaa.spigotcommons.data.Vector2i;
 
-@Getter
-public class ClickInfo {
-	Vector2i slot;
-	Player player;
-	@Setter boolean cancelled;
-	InventoryClickEvent event;
+public class ClickResult {
+	@Getter @Setter
+	boolean cancelled = true;
 
-	void reset(Vector2i slot, Player player, InventoryClickEvent event){
-		this.slot = slot;
-		this.cancelled = true;
-		this.player = player;
-		this.event = event;
-	}
 
-	/**
-	 * Events should only be read
-	 */
-	public InventoryClickEvent getEvent() {
-		return event;
-	}
 }

@@ -25,104 +25,91 @@
 package space.quinoaa.spigotcommons.gui.frame.component;
 
 import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import space.quinoaa.spigotcommons.data.Provider;
-import space.quinoaa.spigotcommons.data.Vector2i;
-import space.quinoaa.spigotcommons.gui.frame.ClickInfo;
+import space.quinoaa.spigotcommons.gui.data.Vector2i;
+import space.quinoaa.spigotcommons.gui.frame.ClickResult;
 import space.quinoaa.spigotcommons.gui.frame.Component;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ListView<T> extends Component {
-	List<T> list;
-	Function<T, ItemStack> mapper;
-	Provider<ItemStack> background = ()->null;
-	BiConsumer<T, ClickType> onClick;
-	@Getter @Setter	Consumer<ListView<T>> pageListener = (list)->{};
+	final Function<T, ItemStack> mapper;
+	private List<T> list = Collections.emptyList();
 
-	@Getter int itemPerPage = 0;
-	@Getter int page = 0;
-	@Getter int pageMax = 0;
+	@Getter private int page = 0, pageMax = 0;
+	@Getter private int itemPerPage;
 
-	public ListView(List<T> list, Function<T, ItemStack> mapper, BiConsumer<T, ClickType> onClick) {
-		setList(list);
+	private Consumer<T> clickHandler;
+
+	public ListView(Function<T, ItemStack> mapper) {
 		this.mapper = mapper;
-		this.onClick = onClick;
 	}
 
-	public ListView(List<T> list, Function<T, ItemStack> mapper, BiConsumer<T, ClickType> onClick,
-					Button previous, Button next) {
-		this(list, mapper, onClick);
-		previous.setOnClick(t->turnPages(-1));
-		next.setOnClick(t->turnPages(1));
+	public ListView(Function<T, ItemStack> mapper, List<T> list){
+		this(mapper);
+		this.list = list;
+	}
+
+	public ListView<T> setClickEvent(Consumer<T> handler){
+		this.clickHandler = handler;
+		return this;
 	}
 
 
 	@Override
 	public void init() {
 		itemPerPage = getSize().getArea();
-		updateList();
+		setList(list);
 	}
-
-
-
-	public void setPage(int page){
-		this.page = page;
-		updateList();
-	}
-	public void turnPages(int pages){
-		this.page = this.page + pages;
-		updateList();
-	}
-
 
 	public void setList(List<T> list){
-		this.list = new ArrayList<>(list);
-		updateList();
-	}
-
-	public void updateList(){
-		if(itemPerPage == 0) return;
-
+		this.list = list;
 		pageMax = list.size() / itemPerPage;
 		page = Math.min(page, pageMax);
-		page = Math.max(0, page);
 
 		render();
-		pageListener.accept(this);
 	}
-
-
-	@Override
-	public void onClick(ClickInfo info) {
-		if(itemPerPage == 0) return;
-
-		int index = info.getSlot().toIndex(getSize().x) + page * itemPerPage;
-		if(index < list.size()){
-			onClick.accept(list.get(index), info.getEvent().getClick());
-		}
-	}
-
-
 
 	@Override
 	public void render() {
-		if(itemPerPage == 0) return;
+		int itemOffset = page * itemPerPage;
+		int itemOffsetEnd = Math.min((page + 1) * itemPerPage, list.size());
+		int width = getSize().x;
 
-		fillItems(getSize().toBounds(0, 0), background.get());
-
-		int pageOffset = page * itemPerPage, max = Math.min(itemPerPage + pageOffset, list.size());
-		for (int i = pageOffset; i < max; i++) {
-			T item = list.get(i);
-
-			Vector2i position = Vector2i.fromSlot(i - pageOffset, getSize().x);
-			setItem(position, mapper.apply(item));
+		fillItem(null, getSize());
+		for (int i = itemOffset; i < itemOffsetEnd; i++) {
+			setItem(mapper.apply(list.get(i)), Vector2i.fromSlotCount(i - itemOffset, width));
 		}
+	}
+
+	@Override
+	public void onClick(InventoryClickEvent event, Vector2i relative, ClickResult result) {
+		if(clickHandler == null) return;
+
+		int index = itemPerPage * page + relative.toIndex(getSize().x);
+		if(index >= list.size()) return;
+
+		clickHandler.accept(list.get(index));
+	}
+
+	/**
+	 * Sets the current page.
+	 */
+	public void setPage(int page){
+		this.page = Math.min(Math.max(page, 0), pageMax);
+
+		render();
+	}
+
+	/**
+	 * adds "add" to page index.
+	 * @param add added to page index.
+	 */
+	public void movePage(int add) {
+		setPage(page + add);
 	}
 }

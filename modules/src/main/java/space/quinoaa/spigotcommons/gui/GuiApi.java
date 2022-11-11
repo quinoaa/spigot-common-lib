@@ -34,13 +34,11 @@ public class GuiApi {
 
 
 	public void showGui(Player player, GuiHandler handler){
-		module.manager.showGui(player, handler);
+		module.mgr.showGui(player, handler);
 	}
 
-	/**
-	 * @return Current open gui or null
-	 */
-	public GuiHandler getCurrentGui(Player player){
-		return module.manager.getGui(player);
+
+	public GuiHandler getGui(Player player) {
+		return module.mgr.getGui(player);
 	}
 }

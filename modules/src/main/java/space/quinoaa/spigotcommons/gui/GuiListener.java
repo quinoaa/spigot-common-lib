@@ -25,35 +25,38 @@
 package space.quinoaa.spigotcommons.gui;
 
 import lombok.AllArgsConstructor;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 @AllArgsConstructor
 public class GuiListener implements Listener {
-	final GuiModule module;
-
-
-	@EventHandler
-	public void onOpen(InventoryOpenEvent event){
-		//TODO
-	}
-
-	@EventHandler
-	public void onClose(InventoryCloseEvent event){
-		HumanEntity entity = event.getPlayer();
-
-		if(entity instanceof Player) module.manager.guiClosed((Player) entity);
-	}
+	private final GuiModule module;
 
 	@EventHandler
 	public void onClick(InventoryClickEvent event){
-		HumanEntity entity = event.getWhoClicked();
+		GuiHandler handler = module.api.getGui((Player)event.getWhoClicked());
+		if(handler == null) return;
+		handler.click(event);
+	}
 
-		if(entity instanceof Player) module.manager.click(event, (Player)entity);
+	@EventHandler
+	public void onDrag(InventoryDragEvent event){
+		GuiHandler handler = module.api.getGui((Player)event.getWhoClicked());
+		if(handler == null) return;
+		handler.drag(event);
+	}
+
+
+	@EventHandler
+	public void onClose(InventoryCloseEvent event){
+		module.mgr.onClose((Player) event.getPlayer(), event.getView());
+	}
+	@EventHandler
+	public void onOpen(InventoryOpenEvent event){
 	}
 }

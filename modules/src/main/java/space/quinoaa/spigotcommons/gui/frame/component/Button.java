@@ -24,38 +24,30 @@
 
 package space.quinoaa.spigotcommons.gui.frame.component;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import space.quinoaa.spigotcommons.data.Provider;
-import space.quinoaa.spigotcommons.gui.frame.ClickInfo;
+import space.quinoaa.spigotcommons.gui.data.Vector2i;
+import space.quinoaa.spigotcommons.gui.frame.ClickResult;
+import space.quinoaa.spigotcommons.impl.Provider;
 
 import java.util.function.Consumer;
 
-public class Button extends Panel{
-	@Getter @Setter	Consumer<ClickType> onClick;
+public class Button extends Label {
+	final Consumer<InventoryClickEvent> onClick;
 
+	public Button(Provider<ItemStack> iconProvider, Consumer<InventoryClickEvent> onClick) {
+		super(iconProvider);
 
-	public Button(@NonNull Provider<ItemStack> item) {
-		this(item, click->{});
-	}
-
-	public Button(@NonNull ItemStack item) {
-		this(item, click->{});
-	}
-
-	public Button(@NonNull ItemStack item, Consumer<ClickType> onClick) {
-		this(()->item, onClick);
-	}
-	public Button(@NonNull Provider<ItemStack> item, Consumer<ClickType> onClick) {
-		super(item);
 		this.onClick = onClick;
 	}
 
+	public Button(ItemStack item, Consumer<InventoryClickEvent> onClick) {
+		this(()->item, onClick);
+	}
+
+
 	@Override
-	public void onClick(ClickInfo info) {
-		onClick.accept(info.getEvent().getClick());
+	public void onClick(InventoryClickEvent event, Vector2i relative, ClickResult result) {
+		onClick.accept(event);
 	}
 }
