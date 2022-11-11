@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-package space.quinoaa.spigotcommons.data;
+package space.quinoaa.spigotcommons.impl;
 
-public interface Provider<T> {
-	T get();
+public interface Builder<T> {
+	T build();
 }
