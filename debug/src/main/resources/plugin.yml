@@ -6,3 +6,5 @@ main: space.quinoaa.testplugin.TestPlugin
 commands:
   guidebug:
     aliases: gd
+  test:
+    description: test command
