@@ -1,25 +1,30 @@
 package space.quinoaa.testplugin;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import lombok.Getter;
+import space.quinoaa.spigotcommons.ModulePlugin;
+import space.quinoaa.spigotcommons.gui.GuiApi;
 import space.quinoaa.spigotcommons.gui.GuiModule;
-import space.quinoaa.testplugin.command.DebugCommand;
+import space.quinoaa.spigotcommons.lang.Localization;
+import space.quinoaa.testplugin.command.TestCommand;
 
-public class TestPlugin extends JavaPlugin {
+public class TestPlugin extends ModulePlugin {
 	public static TestPlugin instance;
-	public static GuiModule guiModule = new GuiModule();
-
+	@Getter public static Localization lang;
+	@Getter public static GuiApi guiApi;
 
 
 	@Override
-	public void onEnable() {
+	public void enable() {
+		lang = new Localization(this.getClass(), "en.yml");
 		instance = this;
-		guiModule.load(this);
+		guiApi = loadModule(GuiModule::new);
 
-		getCommand("guidebug").setExecutor(new DebugCommand());
+		TestCommand.register(this);
 	}
 
 	@Override
-	public void onDisable() {
-		guiModule.dispose();
+	public void disable() {
+
 	}
+
 }
