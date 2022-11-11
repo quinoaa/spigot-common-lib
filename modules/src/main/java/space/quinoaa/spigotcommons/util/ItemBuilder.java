@@ -25,9 +25,11 @@
 package space.quinoaa.spigotcommons.util;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ItemBuilder {
@@ -50,6 +52,19 @@ public class ItemBuilder {
 		this(new ItemStack(material, amount, damage));
 	}
 
+	public static ItemBuilder of(ItemStack item) {
+		return new ItemBuilder(item);
+	}
+
+	public static ItemBuilder of(Material material) {
+		return new ItemBuilder(material);
+	}
+	public static ItemBuilder of(Material material, int amount) {
+		return new ItemBuilder(material, amount);
+	}
+	public static ItemBuilder of(Material material, int amount, short damage) {
+		return new ItemBuilder(material, amount, damage);
+	}
 
 
 	public ItemBuilder setAmount(int amount){
@@ -81,4 +96,29 @@ public class ItemBuilder {
 		item.setItemMeta(meta);
 		return this;
 	}
+
+	public ItemBuilder setLore(String... lore) {
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(Arrays.asList(lore));
+		item.setItemMeta(meta);
+		return this;
+	}
+
+	public ItemBuilder addEnchant(Enchantment enchant, int level){
+		ItemMeta meta = item.getItemMeta();
+		meta.addEnchant(enchant, level, false);
+		item.setItemMeta(meta);
+		return this;
+	}
+
+	public ItemBuilder addEnchantUnsafe(Enchantment enchant, int level){
+		ItemMeta meta = item.getItemMeta();
+		meta.addEnchant(enchant, level, true);
+		item.setItemMeta(meta);
+		return this;
+	}
+
+
+
+
 }
