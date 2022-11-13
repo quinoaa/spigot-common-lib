@@ -67,7 +67,7 @@ public abstract class ComponentHolder extends ComponentMask{
 	 * @param component to remove
 	 */
 	public void removeComponent(Component component){
-		components.remove(component);
+		super.removeComponent(component);
 		component.parent = null;
 		component.bounds.forEach(this::clearItem);
 		component.bounds = null;
